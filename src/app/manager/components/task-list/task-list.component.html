@@ -1,0 +1,83 @@
+<div class="card">
+    <div class="card-header">
+        {{pageTitle}}
+        <div class="spinner-border spinner-border-sm" role="status" *ngIf="process">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Filter the Title   -->
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">Filter by:</div>
+            <div class="col-md-4">
+                <input type="text" [(ngModel)]="listFilter" />
+            </div>
+            <div class="col-md-4 float-right">
+                <a class="btn btn-dark" [routerLink]="['/add']">
+                    Add Task
+                </a>
+            </div>
+        </div>
+        <div class=" row" *ngIf="tasks && tasks.length">
+            <div class="col-md-4" *ngFor="let state of getStates">
+                <div class="card text-white m-3" [ngClass]="getSummaryClass(state.id)">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getSummaryLength(state.id)}} are {{state.name}}</h5>
+                        <p class="card-text" *ngIf="getSummaryLength(state.id)">
+                            <span>{{getSummaryHours(state.id)}}</span> <span class="ml-2">hrs.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="listFilter">
+            <div class="col-md-6">
+                <h4>Task filtered by: {{listFilter}}</h4>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table" *ngIf="tasks && tasks.length">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Description</td>
+                        <td>State</td>
+                        <td>Estimation</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let task of filteredTasks'>
+                        <td>
+                            <a [routerLink]="['/update', task.id]">
+                                {{ task.name }}
+                            </a>
+                        </td>
+                        <td>{{ task.description }}</td>
+                        <td>
+                            <span *ngIf="task.stateId==1" class="badge badge-secondary">Planned</span>
+                            <span *ngIf="task.stateId==2" class="badge badge-success">In progress</span>
+                            <span *ngIf="task.stateId==3" class="badge badge-info">Completed</span>
+                        </td>
+                        <td>{{ task.estimate}}</td>
+                        <td>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <a class="btn btn-outline-primary" [routerLink]="['/update', task.id]">
+                                    Edit
+                                </a>
+                                <button class="btn btn-outline-danger" [disabled]="process" (click)='deleteTask(task)'>
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class='alert alert-danger' *ngIf='errorMessage'>
+        Error: {{ errorMessage }}
+    </div>
+</div>

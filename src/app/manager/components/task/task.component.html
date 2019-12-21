@@ -1,0 +1,80 @@
+<div class="card">
+    <div class="card-header">
+        {{pageTitle}}
+        <div class="spinner-border spinner-border-sm" role="status" *ngIf="process">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div class="card-body" *ngIf="task">
+        <form novalidate [formGroup]="taskForm" (ngSubmit)="saveTask()">
+            <fieldset>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="inputTaskName">Task name</label>
+                    <div class="col-md-8">
+                        <input class="form-control" id="inputTaskName" type="text" placeholder="Name (required)"
+                            formControlName="name" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="inputTaskDescription">Description</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="inputTaskDescription" placeholder="Description" rows=3
+                            formControlName="description"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="inputEstimation">Estimation</label>
+                    <div class="col-md-4">
+                        <input class="form-control" id="inputEstimation" type="number" min="1"
+                            formControlName="estimate" />
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            In hours
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="stateId">State</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="stateId" formControlName="stateId">
+                            <option *ngFor="let state of getStates" [value]="state.id">{{state.name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-md-4 col-md-offset-2">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <button class="btn btn-primary" *ngIf="task.id" type="submit" [disabled]='!taskForm.valid'>
+                                Update
+                            </button>
+                            <button class="btn btn-primary" *ngIf="!task.id" type="submit" [disabled]='!taskForm.valid'>
+                                Save
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" [routerLink]="['/']">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div *ngIf="!task && !process" class="text-center">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <a class="btn btn-dark" [routerLink]="['/add']">
+                Add new task
+            </a>
+            <a class="btn btn-outline-dark" [routerLink]="['/']">
+                Go Back
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}
+    </div>
+</div>
